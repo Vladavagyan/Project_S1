@@ -1,0 +1,133 @@
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>  // for exit()
+
+#define MAX_ADDRESS_LENGTH 100
+
+// Function to calculate the price of the cake based on characteristics
+float calculatePrice(int flavor, int persons, int hasNuts, int hasCustomDesign, int stages) {
+    float basePrice;
+
+    // Setting price for each type
+    if (flavor == 1) {
+        basePrice = 10.0;  // Vanilla base price
+    } else if (flavor == 2) {
+        basePrice = 13.0;  // Chocolate base price
+    } else if (flavor == 3) {
+        basePrice = 16.0;  // Strawberry base price
+    } else {
+        printf("Invalid flavor selection.\n");
+        exit(EXIT_FAILURE);  // Exit with failure status for an invalid flavor
+    }
+
+    // Additional charges based on characteristics
+    float nutsCharge = hasNuts ? 8.0 : 0.0;
+    float designCharge = hasCustomDesign ? 10.0 : 0.0;
+
+    // Calculate the total price
+    float totalPrice = (basePrice + nutsCharge + designCharge) * persons * stages;
+
+    return totalPrice;
+}
+
+// Description of each cake type
+void displayCakeDescriptions() {
+    printf("Birthday Cake Options:\n");
+    printf("1. Vanilla - A basic sponge enriched with vanilla flavoring and covered in a plain buttercream.\n");
+    printf("2. Chocolate - A cake made with chocolate or cocoa.\n");
+    printf("3. Strawberry - Combines layers of strawberry with strawberry-flavored cream.\n");
+}
+
+int main() {
+    int cakeType, persons, hasNuts, hasCustomDesign, stages, wantsDelivery;
+    long long orderDate;
+    char address[MAX_ADDRESS_LENGTH];
+
+    // Display general information
+    printf("Welcome to the Birthday Cake Ordering System!\n");
+
+    // Display available cake types with descriptions
+    displayCakeDescriptions();
+
+    // User input for cake type
+    printf("Which cake do you like most? Enter the type number: ");
+    scanf("%d", &cakeType);
+
+    // Validate cakeType input
+    if (cakeType < 1 || cakeType > 3) {
+        printf("Invalid input for cake type. Please enter 1, 2, or 3.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // User input for number of persons
+    printf("For how many persons?: ");
+    scanf("%d", &persons);
+
+    // User input for number of stages
+    printf("How many stages do you want for the cake?: ");
+    scanf("%d", &stages);
+
+    // Validate stages input
+    if (stages <= 0) {
+        printf("Invalid input for stages. Please enter a positive number.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // User input for nuts
+    printf("Should we include nuts? (1 for yes, 0 for no): ");
+    scanf("%d", &hasNuts);
+
+    // Validate hasNuts input
+    if (hasNuts != 0 && hasNuts != 1) {
+        printf("Invalid input for nuts. Please enter 0 for no or 1 for yes.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // User input for custom design
+    printf("Do you want a custom design? (1 for yes, 0 for no): ");
+    scanf("%d", &hasCustomDesign);
+
+    // Validate hasCustomDesign input
+    if (hasCustomDesign != 0 && hasCustomDesign != 1) {
+        printf("Invalid input for custom design. Please enter 0 for no or 1 for yes.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // User input for delivery
+    printf("Do you want the cake to be delivered? (1 for yes, 0 for no): ");
+    scanf("%d", &wantsDelivery);
+
+    // Validate wantsDelivery input
+    if (wantsDelivery != 0 && wantsDelivery != 1) {
+        printf("Invalid input for delivery. Please enter 0 for no or 1 for yes.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Check if the entered date is today (if delivery is requested)
+    if (wantsDelivery) {
+        // Additional input for delivery address
+        printf("Please enter your delivery address: ");
+        scanf(" %[^\n]", address);
+
+        printf("Please enter the expected delivery date of the order (DD-MM-YYYY): ");
+        scanf("%lld", &orderDate);
+    }
+
+    // Calculate the price
+    float totalPrice = calculatePrice(cakeType, persons, hasNuts, hasCustomDesign, stages);
+
+    // Display the total price and additional information
+    if (totalPrice != -1.0) {
+        printf("The total price of the cake is: $%.2f\n", totalPrice);
+
+        if (wantsDelivery) {
+            printf("The cake will be delivered to %s on %lldth.\n", address, orderDate);
+        } else {
+            printf("You can pick up the cake from our store at Teryan 45.\n");
+        }
+    } else {
+        printf("Price calculation failed. Please check your inputs.\n");
+    }
+
+    return 0;
+}
